@@ -1,46 +1,54 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[59]:
+# In[182]:
 
 
 import nltk
 import numpy as np
 import random
 import string
+from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+import time
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 
-# In[60]:
+# In[204]:
 
 
 f = open('whatsappChat.txt')
 
 
-# In[61]:
+# In[205]:
 
 
 raw = f.read()
 
 
-# In[62]:
+# In[206]:
 
 
 chat_list = raw.lower().split('\n')
 
 
-# In[88]:
+# In[208]:
 
 
-training_chat_count = 4001
+training_chat_count = int(input("Enter number of chats you want to train with"))
 
 
-# In[89]:
+# In[209]:
 
 
 some_chats = chat_list[:training_chat_count]
 
 
-# In[90]:
+# In[210]:
 
 
 def seperate_received_sent(chat_list, sender, receiver):
@@ -60,94 +68,75 @@ def seperate_received_sent(chat_list, sender, receiver):
                 count += 1
             sent.append(sent_msg)
         except:
-            return (received, sent)            
+            return (received, sent)
 
 
-# In[91]:
+# In[211]:
 
 
-sender = input("Give Sender Name")
-receiver = input('Give Your name')
+sender = input("Give Sender Name:").lower()
+receiver = input('Give Your name:').lower()
 
 
-# In[92]:
+# In[ ]:
 
 
 received_messages, sent_messages = seperate_received_sent(some_chats,sender , receiver)
 
 
-# In[93]:
-
-
-# import pickle
-
-# with open('sender.pkl', 'wb') as f:
-#   pickle.dump(received_messages, f)
-# with open('receiver.pkl', 'wb') as f:
-#   pickle.dump(sent_messages, f)
-
-
-# In[94]:
+# In[82]:
 
 
 final_length = len(sent_messages) if len(sent_messages) >  len(received_messages) else len(received_messages)
 
 
-# In[95]:
+# In[83]:
 
 
 received_messages = received_messages[:final_length]
 sent_messages = sent_messages[:final_length]
 
 
-# In[96]:
+# In[84]:
 
 
 sent_tokens = received_messages
 word_tokens = nltk.word_tokenize(' '.join(word for word in received_messages))
 
 
-# In[99]:
+# In[85]:
 
 
 lemmer = nltk.stem.WordNetLemmatizer()
 
 
-# In[100]:
+# In[86]:
 
 
 def LemTokens(tokens):
     return [lemmer.lemmatize(token) for token in tokens]
 
+
+# In[87]:
+
+
 remove_punct_dict = dict((ord(punct), None) for punct in string.punctuation)
 
 
-# In[101]:
+# In[88]:
 
 
 remove_punct_dict['<media omitted>'] = None
 
 
-# In[102]:
+# In[89]:
 
 
 def LemNormalize(text):
     return LemTokens(nltk.word_tokenize(text.lower().translate(remove_punct_dict)))
 
 
-# In[103]:
-
-
-from sklearn.feature_extraction.text import TfidfVectorizer
-
-
-# In[104]:
-
-
-from sklearn.metrics.pairwise import cosine_similarity
-
-
-# In[105]:
+# In[90]:
 
 
 def response(received_message):
@@ -170,19 +159,76 @@ def response(received_message):
         return robo_response
 
 
-# In[ ]:
+# In[174]:
 
 
-flag=True
-while(flag==True):
-    user_message = input()
-    user_message = user_message.lower()
-    if(user_message != 'bye'):
-        print(response(user_message))
-        sent_tokens.remove(user_message)
-    else:
-        flag=False
-        print('Bye')
+driver = webdriver.Chrome('chromedriver/chromedriver')
+
+
+# In[175]:
+
+
+driver.get("https://web.whatsapp.com")
+input("Scan the qr on whatsapp and press enter")
+
+
+# In[176]:
+
+
+target = input("Enter Sender name same as on your whatsapp")
+
+
+# In[177]:
+
+
+x_arg = "//span[@title='{}']"
+
+
+# In[178]:
+
+
+user = driver.find_element_by_xpath(x_arg.format(target))
+user.click()
+
+
+# In[179]:
+
+
+inp_xpath = '//div[@class="_2_1wd copyable-text selectable-text"][@contenteditable="true"][@data-tab="6"]'
+input_box = driver.find_element_by_xpath(inp_xpath)
+
+
+# In[180]:
+
+
+def reply_message(sender):
+    last_message = ""
+    flag = True
+    while flag:
+        messages_xpath = '//*[contains(@data-pre-plain-text,"{}")]'.format(sender)
+        messages = driver.find_elements_by_xpath(messages_xpath)
+        user_message = messages[-1].text.lower()
+        try:
+            if(user_message != last_message):
+                last_message = user_message
+                if(user_message != 'bye'):
+                    reply = response(user_message)
+                    print("input:"+user_message+"\nOutput:"+reply)
+                    input_box.send_keys(reply + Keys.ENTER)
+                    sent_tokens.remove(user_message)
+                else:
+                    flag=False
+                    print('Bye')
+            else:
+                pass
+        except:
+            print("Exception occured")
+
+
+# In[181]:
+
+
+reply_message(target)
 
 
 # In[ ]:
