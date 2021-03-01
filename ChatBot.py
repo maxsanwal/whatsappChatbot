@@ -21,7 +21,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 # In[204]:
 
 
-f = open('whatsappChat.txt')
+f = open('whatsappChat.txt', encoding="utf8")
 
 
 # In[205]:
