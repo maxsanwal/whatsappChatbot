@@ -1,13 +1,7 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[182]:
-
-
 import nltk
-import numpy as np
 import random
 import string
+import re
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -17,33 +11,16 @@ import time
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-
-# In[204]:
-
-
 f = open('whatsappChat.txt', encoding="utf8")
-
-
-# In[205]:
 
 
 raw = f.read()
 
-
-# In[206]:
-
-
 re_date_time = '\d\d/\d\d/\d\d, \d?\d:\d\d '
 chat_list = re.split(re_date_time, raw.lower())
 
-
-# In[209]:
-
-
 some_chats = chat_list[1:]
 
-
-# In[210]:
 def remove_emoji_newline(string):
     emoji_pattern = re.compile("["
                            u"\U0001F600-\U0001F64F"  # emoticons
@@ -88,74 +65,31 @@ def seperate_received_sent(chat_list, sender, receiver):
         except:
             return (received, sent)
 
-
-# In[211]:
-
-
 sender = input("Give Sender Name:").lower()
 receiver = input('Give Your name:').lower()
 
 
-# In[ ]:
-
-
 received_messages, sent_messages = seperate_received_sent(some_chats,sender , receiver)
 
-
-# In[82]:
-
-
 final_length = len(sent_messages) if len(sent_messages) >  len(received_messages) else len(received_messages)
-
-
-# In[83]:
-
 
 received_messages = received_messages[:final_length]
 sent_messages = sent_messages[:final_length]
 
-
-# In[84]:
-
-
-sent_tokens = received_messages
+ent_tokens = received_messages
 word_tokens = nltk.word_tokenize(' '.join(word for word in received_messages))
 
-
-# In[85]:
-
-
 lemmer = nltk.stem.WordNetLemmatizer()
-
-
-# In[86]:
-
 
 def LemTokens(tokens):
     return [lemmer.lemmatize(token) for token in tokens]
 
-
-# In[87]:
-
-
 remove_punct_dict = dict((ord(punct), None) for punct in string.punctuation)
-
-
-# In[88]:
-
 
 remove_punct_dict['<media omitted>'] = None
 
-
-# In[89]:
-
-
 def LemNormalize(text):
     return LemTokens(nltk.word_tokenize(text.lower().translate(remove_punct_dict)))
-
-
-# In[90]:
-
 
 def response(received_message):
     robo_response=''
@@ -176,48 +110,20 @@ def response(received_message):
         robo_response = robo_response+sent_messages[idx]
         return robo_response
 
-
-# In[174]:
-
-
 driver = webdriver.Chrome('chromedriver/chromedriver')
-
-
-# In[175]:
-
 
 driver.get("https://web.whatsapp.com")
 input("Scan the qr on whatsapp and press enter")
 
-
-# In[176]:
-
-
 target = input("Enter Sender name same as on your whatsapp")
 
-
-# In[177]:
-
-
 x_arg = "//span[@title='{}']"
-
-
-# In[178]:
-
 
 user = driver.find_element_by_xpath(x_arg.format(target))
 user.click()
 
-
-# In[179]:
-
-
 inp_xpath = '//div[@class="_2_1wd copyable-text selectable-text"][@contenteditable="true"][@data-tab="6"]'
 input_box = driver.find_element_by_xpath(inp_xpath)
-
-
-# In[180]:
-
 
 def reply_message(sender):
     last_message = ""
@@ -242,15 +148,4 @@ def reply_message(sender):
         except:
             print("Exception occured")
 
-
-# In[181]:
-
-
 reply_message(target)
-
-
-# In[ ]:
-
-
-
-
