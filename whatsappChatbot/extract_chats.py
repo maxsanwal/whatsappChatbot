@@ -1,7 +1,9 @@
 import re
 
 #seperating chats into list of 2 users
-def extract_chats(sender_name, receiver_name):
+def extract_chats():
+    sender_name = input("Give Sender Name(Keep it sames as in the file):")
+    receiver_name = input("Give Your name(Keep in same as in the file):")
     #reading the chats into a string
     chat_filename = input("Enter filename: ")
     f = open(chat_filename, encoding="utf8")
@@ -26,4 +28,15 @@ def extract_chats(sender_name, receiver_name):
         #currently returning value in the except condition as the current logic fails after 
         #reaching end of file. Fix required
         except:
-            return (received, sent)
+            break
+
+    #get the min length to match the sent receive count to 
+    # try to keep only the chats which were answered
+    final_length = len(sent) if len(sent) <  len(received) else len(received)
+
+    received_messages = received[:final_length]
+    sent_messages = sent[:final_length]
+
+    return (received_messages, sent_messages)
+
+    
