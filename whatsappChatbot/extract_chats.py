@@ -25,12 +25,9 @@ def remove_emoji_newline(string):
     return emoji_pattern.sub(r'', string)
 
 #seperating chats into list of 2 users
-def extract_chats():
-    sender_name = input("Give Sender Name(Keep it sames as in the file):")
-    receiver_name = input("Give Your name(Keep in same as in the file):")
+def extract_chats(sender_name, receiver_name, chat_file_location):
     #reading the chats into a string
-    chat_filename = input("Enter filename: ")
-    f = open(chat_filename, encoding="utf8")
+    f = open(chat_file_location, encoding="utf8")
     chat_string = f.read()
     re_date_time = '\d\d/\d\d/\d\d, \d?\d:\d\d ' #re for datetime in the chat such as (7/11/19, 8:01 )
     chat_list = re.split(re_date_time, chat_string.lower()) #splitting 
@@ -41,11 +38,11 @@ def extract_chats():
         received_msg = ''
         sent_msg = ''
         try:
-            while sender_name+':' in chat_list[count]:
+            while sender_name.lower()+':' in chat_list[count]:
                 received_msg += remove_emoji_newline(chat_list[count].split(':')[1])
                 count += 1
             received.append(received_msg)
-            while receiver_name+':' in chat_list[count]:
+            while receiver_name.lower()+':' in chat_list[count]:
                 sent_msg += remove_emoji_newline(chat_list[count].split(':')[1])
                 count += 1
             sent.append(sent_msg)
