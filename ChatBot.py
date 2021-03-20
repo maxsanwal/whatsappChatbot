@@ -76,7 +76,7 @@ final_length = len(sent_messages) if len(sent_messages) >  len(received_messages
 received_messages = received_messages[:final_length]
 sent_messages = sent_messages[:final_length]
 
-ent_tokens = received_messages
+sent_tokens = received_messages
 word_tokens = nltk.word_tokenize(' '.join(word for word in received_messages))
 
 lemmer = nltk.stem.WordNetLemmatizer()
