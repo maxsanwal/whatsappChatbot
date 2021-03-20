@@ -1,17 +1,9 @@
-from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+import os
 
-
-def automation(sender_name):
-    print('To find')
-    driver = webdriver.Chrome('chromedriver/chromedriver')
-    print('Found')
-    driver.get("https://web.whatsapp.com")
-    input("Scan the qr on whatsapp and press enter")
-
+def automation(sender_name, driver):
     #to find and open a specific contact
     x_arg = "//span[@title='{}']"
     user = driver.find_element_by_xpath(x_arg.format(sender_name))
