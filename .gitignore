@@ -1,3 +1,7 @@
 chatbot/
 .vscode/
 whatsappchatbot/__pycache__/
+build/
+dist/*
+src/whatsappchatbot.egg-info/*
+src/whatsappchatbot_pkg_seemantsingh.egg-info/*
