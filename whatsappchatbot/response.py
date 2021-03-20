@@ -26,8 +26,8 @@ def response(current_received_message, all_received_messages, sent_messages):
     flat = vals.flatten()
     flat.sort()
     req_tfidf = flat[-2]
-    sent_tokens.remove(user_message)
-    
+    sent_tokens.remove(current_received_message)
+
     if(req_tfidf==0):
         robo_response=robo_response+"Kya mtlb"
         return robo_response
