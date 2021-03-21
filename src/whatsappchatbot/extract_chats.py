@@ -30,7 +30,7 @@ def extract_chats(sender_name, receiver_name, chat_file_location):
     f = open(chat_file_location, encoding="utf8")
     chat_string = f.read()
     re_date_time = '\d\d/\d\d/\d\d, \d?\d:\d\d ' #re for datetime in the chat such as (7/11/19, 8:01 )
-    chat_list = re.split(re_date_time, chat_string.lower()) #splitting 
+    chat_list = re.split(re_date_time, chat_string.lower())[1:] #splitting 
     count = 0
     received = []
     sent = []
