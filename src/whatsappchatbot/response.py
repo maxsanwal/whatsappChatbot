@@ -4,6 +4,9 @@ from sklearn.metrics.pairwise import cosine_similarity
 import string
 from selenium.webdriver.common.keys import Keys
 
+nltk.download('punkt') 
+nltk.download('wordnet') 
+
 lemmer = nltk.stem.WordNetLemmatizer()
 remove_punct_dict = dict((ord(punct), None) for punct in string.punctuation)
 remove_punct_dict['<media omitted>'] = None
