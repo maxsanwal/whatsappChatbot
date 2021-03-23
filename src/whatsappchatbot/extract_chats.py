@@ -38,14 +38,17 @@ def extract_chats(sender_name, receiver_name, chat_file_location):
         received_msg = ''
         sent_msg = ''
         try:
-            while sender_name.lower()+':' in chat_list[count]:
-                received_msg += remove_emoji_newline(chat_list[count].split(':')[1])
+            if (sender_name.lower()+':' in chat_list[count] or receiver_name.lower()+':' in chat_list[count]):
+                while sender_name.lower()+':' in chat_list[count]:
+                    received_msg += remove_emoji_newline(chat_list[count].split(':')[1])
+                    count += 1
+                received.append(received_msg)
+                while receiver_name.lower()+':' in chat_list[count]:
+                    sent_msg += remove_emoji_newline(chat_list[count].split(':')[1])
+                    count += 1
+                sent.append(sent_msg)
+            else:
                 count += 1
-            received.append(received_msg)
-            while receiver_name.lower()+':' in chat_list[count]:
-                sent_msg += remove_emoji_newline(chat_list[count].split(':')[1])
-                count += 1
-            sent.append(sent_msg)
         #currently returning value in the except condition as the current logic fails after 
         #reaching end of file. Fix required
         except:
