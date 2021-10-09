@@ -10,7 +10,7 @@ def automation(sender_name, driver):
     user.click()
 
     #to select the text box
-    inp_xpath = '//div[@class="_2_1wd copyable-text selectable-text"][@contenteditable="true"][@data-tab="6"]'
+    inp_xpath = '//div[@class="_13NKt copyable-text selectable-text"][@contenteditable="true"][@data-tab="9"]'
     input_box = driver.find_element_by_xpath(inp_xpath)
 
     return input_box

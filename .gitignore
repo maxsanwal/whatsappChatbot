@@ -5,3 +5,4 @@ dist/*
 src/whatsappchatbot.egg-info/*
 src/whatsappchatbot_pkg_seemantsingh.egg-info/*
 src/whatsappchatbot/__pycache__/*
+env
